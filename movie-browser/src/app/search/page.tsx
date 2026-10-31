@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { searchMovies } from "@/lib/tmdb";
 import MovieGrid from "@/components/MovieGrid";
+import Pagination from "@/components/Pagination";
+import { parsePage } from "@/utils/pagination";
 
 // ?q=a&q=b gives an array, so always take a single string so TypeScript forces you to handle three cases: string, array or missing. Number(...) || 1 turns ?page=abc into page 1 instead of NaN.
 const getQuery = (value: string | string[] | undefined) =>
@@ -15,7 +17,7 @@ const SearchPage = async ({ searchParams }: PageProps<"/search">) => {
   // The server page: searchParams is a Promise and can be an array -/search?q=a&q=b gives q = ["a", "b"]
   const params = await searchParams;
   const q = getQuery(params.q);
-  const page = Number(getQuery(params.page)) || 1;
+  const page = parsePage(params.page); // ?page=0 or 501 would make TMDB return 400
 
   if (!q) {
     return (
@@ -35,7 +37,10 @@ const SearchPage = async ({ searchParams }: PageProps<"/search">) => {
       </h1>
 
       {data.results.length > 0 ? (
-        <MovieGrid movies={data.results} />
+        <>
+          <MovieGrid movies={data.results} />
+          <Pagination currentPage={page} totalPages={data.total_pages} basePath="/search" query={{ q }} />
+        </>
       ) : (
         <p className="text-zinc-400">No movies found. Try a different title.</p>
       )}

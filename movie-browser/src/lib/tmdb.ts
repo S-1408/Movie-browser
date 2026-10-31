@@ -1,5 +1,5 @@
 import { API_BASE_URL, ENDPOINTS } from "@/utils/urls";
-import type { MovieDetails, MovieList } from "@/types/movie";
+import type { Genre, MovieDetails, MovieList } from "@/types/movie";
 import { notFound } from "next/navigation";
 
 // tmdb helper
@@ -26,7 +26,7 @@ export async function getTrending(timeWindow:"day"|"week"="week"){
 // getPopular(page)
 // getMovie(id)
 export async function getMovieById(id:string){
- return await tmdb<MovieDetails>(ENDPOINTS.movie(id),86400); //// details rarely change → 1 day
+ return await tmdb<MovieDetails>(ENDPOINTS.movie(id),86400); // details rarely change → 1 day
  
 }
 // searchMovies(q, page)
@@ -35,5 +35,13 @@ export async function searchMovies(query:string,page=1){
  return await tmdb<MovieList>(ENDPOINTS.search(query,page),0);
 }
 // getGenres()
+export async function getGenres(){
+ // genre list almost never changes -> cache 1 day
+ const data = await tmdb<{ genres: Genre[] }>(ENDPOINTS.genres(),86400);
+ return data.genres;
+}
 // getByGenre(id, page)
+export async function getByGenre(genreId:string,page=1){
+ return await tmdb<MovieList>(ENDPOINTS.byGenre(genreId,page));
+}
 // Poster URL: https://image.tmdb.org/t/p/w500${poster_path}

@@ -6,7 +6,6 @@ import { imageUrl } from "@/utils/media";
 export const MovieCard = ({ movie }: { movie: Movie }) => {
   const poster = imageUrl(movie.poster_path);
   const year = movie.release_date?.slice(0, 4);
-console.log(movie)
   return (
     <Link href={`/movie/${movie.id}`} className="group block">
       <div className="relative aspect-[2/3] overflow-hidden rounded-lg ">

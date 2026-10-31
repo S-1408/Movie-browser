@@ -8,7 +8,6 @@ type ErrorPageProps = {
 };
 
 const isDev = process.env.NODE_ENV === "development";
-console.log(process.env.NODE_ENV);
 
 const ErrorPage = ({ error, reset }: ErrorPageProps) => {
   // log in browser console (server errors are already logged in Vercel logs)
@@ -17,14 +16,20 @@ const ErrorPage = ({ error, reset }: ErrorPageProps) => {
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong</h2>
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center gap-4 px-4 py-20 text-center">
+      <p className="text-6xl" aria-hidden="true">🎬</p>
+      <h1 className="text-3xl font-bold">Something went wrong</h1>
       {/* real message only in dev, production shows a safe generic one */}
-      <p>{isDev ? error.message : "We couldn't load this page. Please try again."}</p>
+      <p className="max-w-md text-zinc-400">{isDev ? error.message : "We couldn't load this page. Please try again."}</p>
       {/* digest matches the error id in Vercel logs */}
-      {error.digest && <p>Error ID: {error.digest}</p>}
-      <button onClick={() => reset()}>Try again</button>
-    </div>
+      {error.digest && <p className="font-mono text-xs text-zinc-500">Error ID: {error.digest}</p>}
+      <button
+        onClick={() => reset()}
+        className="mt-2 rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-black hover:bg-yellow-300"
+      >
+        Try again
+      </button>
+    </main>
   )
 }
 
