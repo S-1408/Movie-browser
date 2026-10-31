@@ -7,6 +7,7 @@ export type Movie = {
   backdrop_path: string | null;
   release_date: string;
   vote_average: number;
+  vote_count: number;
   genre_ids: number[];
 };
 

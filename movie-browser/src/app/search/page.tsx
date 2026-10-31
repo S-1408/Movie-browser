@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { searchMovies } from "@/lib/tmdb";
 import MovieGrid from "@/components/MovieGrid";
 import Pagination from "@/components/Pagination";
@@ -41,6 +42,14 @@ const SearchPage = async ({ searchParams }: PageProps<"/search">) => {
           <MovieGrid movies={data.results} />
           <Pagination currentPage={page} totalPages={data.total_pages} basePath="/search" query={{ q }} />
         </>
+      ) : page > data.total_pages && data.total_pages > 0 ? (
+        // e.g. ?page=50 when there are only 2 pages: results exist, just not here
+        <p className="text-zinc-400">
+          No more results on this page.{" "}
+          <Link href={`/search?q=${encodeURIComponent(q)}`} className="text-yellow-400 hover:underline">
+            Back to page 1
+          </Link>
+        </p>
       ) : (
         <p className="text-zinc-400">No movies found. Try a different title.</p>
       )}

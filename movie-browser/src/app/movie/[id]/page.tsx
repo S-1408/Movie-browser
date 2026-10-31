@@ -41,9 +41,9 @@ const MoviePage = async ({ params }: PageProps<"/movie/[id]">) => {
             src={backdrop}
             alt=""
             fill
-            priority
             sizes="100vw"
             className="object-cover opacity-30"
+            preload
           />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent" />
@@ -55,7 +55,7 @@ const MoviePage = async ({ params }: PageProps<"/movie/[id]">) => {
                 src={poster}
                 alt={movie.title}
                 fill
-                priority
+                preload // "priority" is deprecated in Next 16
                 sizes="(max-width: 640px) 192px, 256px"
                 className="object-cover"
               />
@@ -72,7 +72,9 @@ const MoviePage = async ({ params }: PageProps<"/movie/[id]">) => {
             </h1>
             {movie.tagline && <p className="italic text-zinc-400">&ldquo;{movie.tagline}&rdquo;</p>}
             <p className="text-sm text-zinc-300">
-              <span className="text-yellow-400">★ {movie.vote_average.toFixed(1)}</span>
+              <span className="text-yellow-400">
+                {movie.vote_count > 0 ? `★ ${movie.vote_average.toFixed(1)}` : "Not rated yet"}
+              </span>
               {runtime && <> · {runtime}</>}
               {genres && <> · {genres}</>}
             </p>
@@ -89,6 +91,8 @@ const MoviePage = async ({ params }: PageProps<"/movie/[id]">) => {
               src={youtubeEmbedUrl(trailer.key)}
               title={trailer.name}
               className="aspect-video w-full max-w-4xl rounded-lg"
+              loading="lazy" // YouTube player is ~1MB; load it only when scrolled near
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </section>

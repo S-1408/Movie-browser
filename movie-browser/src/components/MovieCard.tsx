@@ -8,7 +8,7 @@ export const MovieCard = ({ movie }: { movie: Movie }) => {
   const year = movie.release_date?.slice(0, 4);
   return (
     <Link href={`/movie/${movie.id}`} className="group block">
-      <div className="relative aspect-[2/3] overflow-hidden rounded-lg ">
+      <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-zinc-800">
         {poster ? (
           <Image
             src={poster}
@@ -22,9 +22,12 @@ export const MovieCard = ({ movie }: { movie: Movie }) => {
             No image
           </div>
         )}
-        <span className="absolute right-2 top-2 rounded bg-black/70 px-1.5 py-0.5 text-xs text-yellow-400">
-          ★ {movie.vote_average.toFixed(1)}
-        </span>
+        {/* unreleased movies have 0 votes; "★ 0.0" would look like a terrible rating */}
+        {movie.vote_count > 0 && (
+          <span className="absolute right-2 top-2 rounded bg-black/70 px-1.5 py-0.5 text-xs text-yellow-400">
+            ★ {movie.vote_average.toFixed(1)}
+          </span>
+        )}
       </div>
       <h3 className="mt-2 truncate text-sm font-medium">{movie.title}</h3>
       {year && <p className="text-xs text-zinc-500">{year}</p>}

@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 
 // tmdb helper
 export async function tmdb<T>(path:string,revalidate=3600):Promise<T>{
+    const token = process.env.TMDB_API_TOKEN;
+    // Clear message instead of a confusing "TMDB 401" (e.g. env var not added on Vercel)
+    if(!token) throw new Error("TMDB_API_TOKEN is not set. Add it to .env.local or Vercel env vars.");
     const res = await fetch(`${API_BASE_URL}${path}`,{
         headers:{
-            Authorization:`Bearer ${process.env.TMDB_API_TOKEN}`
+            Authorization:`Bearer ${token}`
         },
         next:{revalidate}
     })
@@ -26,6 +29,8 @@ export async function getTrending(timeWindow:"day"|"week"="week"){
 // getPopular(page)
 // getMovie(id)
 export async function getMovieById(id:string){
+ // TMDB ids are numbers only; skip the API call for /movie/abc
+ if(!/^\d+$/.test(id)) notFound();
  return await tmdb<MovieDetails>(ENDPOINTS.movie(id),86400); // details rarely change → 1 day
  
 }
