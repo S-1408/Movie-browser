@@ -30,6 +30,10 @@ export async function getMovieById(id:string){
  
 }
 // searchMovies(q, page)
+export async function searchMovies(query:string,page=1){
+ // revalidate 0: every query is different, so don't cache
+ return await tmdb<MovieList>(ENDPOINTS.search(query,page),0);
+}
 // getGenres()
 // getByGenre(id, page)
 // Poster URL: https://image.tmdb.org/t/p/w500${poster_path}
