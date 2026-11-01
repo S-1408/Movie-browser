@@ -11,3 +11,15 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 README.md
+
+# Tests: not needed to build or run the app
+e2e
+test-results
+playwright-report
+coverage
+**/*.test.ts
+**/*.test.tsx
+src/test
+vitest.config.mts
+vitest.setup.ts
+playwright.config.ts
