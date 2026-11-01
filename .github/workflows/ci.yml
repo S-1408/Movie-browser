@@ -17,8 +17,14 @@ concurrency:
 # A workflow is made of one or more JOBS. Each job runs on a fresh virtual machine.
 jobs:
   build:
-    name: Lint & Build
+    name: Lint, Test & Build
     runs-on: ubuntu-latest   # the VM type (a clean Linux machine, every time)
+
+    # The app lives in movie-browser/, not the repo root, so every "run:" command runs there.
+    # (This only affects "run:" steps. "uses:" steps need their paths set themselves, see below.)
+    defaults:
+      run:
+        working-directory: movie-browser
 
     # STEPS run in order, inside the job. If any step fails, the job fails.
     steps:
@@ -32,6 +38,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: movie-browser/package-lock.json # not at the repo root
 
       # 3. Install exact versions from package-lock.json ("run" = a shell command).
       #    npm ci is like npm install, but strict and reproducible — made for CI.
@@ -73,6 +80,6 @@ jobs:
         with:
           name: playwright-report
           path: |
-            playwright-report/
-            test-results/
+            movie-browser/playwright-report/
+            movie-browser/test-results/
           retention-days: 7
