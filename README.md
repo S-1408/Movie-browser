@@ -2,6 +2,11 @@
 
 A movie discovery app built with **Next.js 16 (App Router)**, **React 19**, **TypeScript** and **Tailwind CSS v4**, powered by the [TMDB API](https://www.themoviedb.org/documentation/api).
 
+Deployed on vercel - https://movie-browser-movie-browser.vercel.app/
+
+<img width="1037" height="727" alt="image" src="https://github.com/user-attachments/assets/f0b59cb5-b593-41af-911e-dd8d33a2e0a4" />
+
+
 ## Features
 
 - **Trending movies** – home page shows this week's trending titles
@@ -80,8 +85,5 @@ movie-browser/src
 
 ## Deployment
 
-The app can be deployed to [Vercel](https://vercel.com). Set the root directory to `movie-browser` and add `TMDB_API_TOKEN` under **Project Settings → Environment Variables**.
+The app is deployed to [(https://movie-browser-movie-browser.vercel.app/).
 
-## Credits
-
-This product uses the TMDB API but is not endorsed or certified by TMDB.
