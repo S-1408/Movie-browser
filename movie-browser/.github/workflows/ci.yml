@@ -1,0 +1,52 @@
+# A "workflow" is an automated process GitHub runs for you.
+# Any .yml file in .github/workflows/ is picked up automatically.
+name: CI
+
+# TRIGGERS: when should this workflow run?
+on:
+  push:
+    branches: [master]   # every push to master
+  pull_request:
+    branches: [master]   # every PR that targets master
+
+# If you push twice quickly, cancel the older run instead of running both.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# A workflow is made of one or more JOBS. Each job runs on a fresh virtual machine.
+jobs:
+  build:
+    name: Lint & Build
+    runs-on: ubuntu-latest   # the VM type (a clean Linux machine, every time)
+
+    # STEPS run in order, inside the job. If any step fails, the job fails.
+    steps:
+      # 1. The VM starts empty — download your repo's code onto it.
+      - name: Checkout code
+        uses: actions/checkout@v4   # "uses" = run a prebuilt action from the marketplace
+
+      # 2. Install Node.js. cache: npm reuses downloaded packages between runs (faster).
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Install exact versions from package-lock.json ("run" = a shell command).
+      #    npm ci is like npm install, but strict and reproducible — made for CI.
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Catch code-quality problems.
+      - name: Lint
+        run: npm run lint
+
+      # 5. Make sure the app actually compiles.
+      #    The build prerenders pages that call TMDB, so it needs the token.
+      #    secrets.TMDB_API_TOKEN comes from GitHub repo settings — it's never in the code,
+      #    and GitHub hides it (***) if it ever appears in logs.
+      - name: Build
+        run: npm run build
+        env:
+          TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}

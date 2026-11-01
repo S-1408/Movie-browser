@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: .
+      secrets:
+        - env
+    image: movie-browser
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local # provides TMDB_API_TOKEN at runtime
+    restart: unless-stopped
+
+secrets:
+  env:
+    file: ./.env.local # mounted only during `next build`

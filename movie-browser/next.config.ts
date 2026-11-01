@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: "standalone", // Bundles a minimal server + deps into .next/standalone (used by the Dockerfile).
   cacheComponents: true,//Enables component-level caching features.
   partialPrefetching: true, //Controls partial prefetching behavior.
   images: {
